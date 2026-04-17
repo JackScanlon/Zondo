@@ -1,0 +1,38 @@
+# Output Files
+*.ths
+
+# Program/Test Files
+.project/resources/**/*
+
+# Research/Project Files
+TODO.md
+.project/research/**/*
+
+# Build Artefacts
+.zig-cache/
+zig-out/
+
+# Binaries
+*.exe
+*.dll
+*.pdb
+*.so
+*.dylib
+
+# Env
+.env
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Dev
+.cache/
+.tmp/
+
+# OS
+.DS_Store
+Thumbs.db
+._*

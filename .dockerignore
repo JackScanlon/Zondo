@@ -1,0 +1,31 @@
+# Dev-related
+.git/
+.gitattributes
+.gitignore
+.env.example
+
+# Doc-related
+**/TODO.md
+README.md
+
+# Project-related
+.project/
+
+# Artefacts
+zig-out/
+.zig-cache/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Dev
+.cache/
+.tmp/
+
+# OS
+.DS_Store
+Thumbs.db
+._*

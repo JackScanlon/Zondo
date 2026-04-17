@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    // Language
+    "ziglang.vscode-zig",
+
+    // Tooling
+    "vadimcn.vscode-lldb",
+    "ms-vscode.cpptools",
+
+    // Config
+		"dotenv.dotenv-vscode",
+		"juggernautjp.less-toml",
+		"ms-vscode.makefile-tools"
+  ]
+}

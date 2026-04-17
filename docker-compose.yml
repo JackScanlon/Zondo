@@ -1,0 +1,46 @@
+---
+configs:
+  cfg-pg.conf:
+    file: ${PG_CFG:?"Please provide path to postgresql configuration file."}
+
+volumes:
+  pg-data:
+    driver: local
+
+services:
+  postgres:
+    build:
+      target: postgres-pipeline
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        PG_VERSION: ${TRG_PG_VER:-17.5}
+        DEB_RELEASE: ${TRG_DEB_REL:-trixie}
+    restart: unless-stopped
+    stop_grace_period: 1s
+    command: >
+      postgres -c config_file=/etc/postgresql.conf
+    ports:
+      - ${PG_PORT:-5432}:${PG_PORT:-5432}
+    hostname: postgres
+    environment:
+      POSTGRES_DB: ${PG_DBN:?"`PG_DBN` var is required."}
+      POSTGRES_USER: ${PG_USER:?"`PG_USER` var is required."}
+      POSTGRES_PASSWORD: ${PG_PWD:?"`PG_PWD` var is required."}
+      POSTGRES_INITDB_ARGS: ${PG_ARGS:-"--encoding=UTF-8 --lc-collate=C --lc-ctype=C"}
+    configs:
+      - source: cfg-pg.conf
+        target: /etc/postgresql.conf
+        mode: 0444 # r--r--r--
+    volumes:
+      - type: volume
+        source: pg-data
+        target: /var/lib/postgresql/data
+        volume: {}
+    healthcheck:
+      test: pg_isready --username=${PG_USER} --dbname=${PG_DBN}
+      retries: 3
+      timeout: 5s
+      interval: 1m
+      start_period: 10s
+      start_interval: 5s

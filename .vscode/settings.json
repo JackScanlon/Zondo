@@ -1,0 +1,69 @@
+{
+	// Git behaviour
+	"git.autofetch": true,
+
+	// Base formatting
+  "files.eol": "\n",
+	"files.trimFinalNewlines": true,
+	"files.insertFinalNewline": true,
+	"files.trimTrailingWhitespace": true,
+
+	// Editor config
+	"editor.inlineSuggest.enabled": true,
+	"editor.quickSuggestions": {
+		"strings": "on"
+	},
+
+	// Languages
+	"[zig]": {
+    "editor.rulers": [120],
+		"editor.tabSize": 4,
+    "editor.formatOnSave": true,
+		"editor.insertSpaces": true,
+		"editor.detectIndentation": false,
+    "editor.defaultFormatter": "ziglang.vscode-zig"
+	},
+	"[sql]": {
+		"editor.tabSize": 2,
+		"editor.insertSpaces": true,
+		"editor.detectIndentation": false
+	},
+	"[markdown]": {
+		"editor.tabSize": 4,
+		"editor.insertSpaces": false,
+		"files.trimTrailingWhitespace": false
+	},
+	"[jsonc]": {
+		"editor.tabSize": 2,
+		"editor.insertSpaces": false,
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+
+	// File rule(s)
+	"files.associations": {
+		"*.json": "jsonc"
+	},
+
+	"files.readonlyInclude": {
+		// Project-related
+		"**/docker/lang/*": true,
+		// Artefacts & Vendor
+		"**/zig-out/**/*": true,
+		"**/.zig-cache/**/*": true,
+	},
+
+	// Search rule(s)
+	"search.exclude": {
+		// Misc
+		"**/.tmp/*": true,
+		"**/logs/*": true,
+		"**/.cache/*": true,
+		// Project-related
+		"**/docker/lang/*": true,
+		// Artefacts & Vendor
+		"**/zig-out/**/*": true,
+		"**/.zig-cache/**/*": true,
+		// Generated
+		"**/.output/**/*": true
+	}
+}

@@ -1,0 +1,18 @@
+.{
+    .name = .zondo,
+    .version = "0.1.0",
+    .fingerprint = 0x88d0dc66f9982e3f,
+
+    .dependencies = .{
+        .zimdjson = .{
+            .url = "git+https://github.com/ezequielramis/zimdjson?ref=0.1.1#40a24fd69578c905ca85bc11696240623eefa96d",
+            .hash = "zimdjson-0.1.1-89pgxaJFBgA3iVnu0xX0kHK5h9nQZWp3nmeLKFSPYcxk",
+        },
+    },
+
+    .paths = .{
+        "./src",
+        "./build.zig",
+        "./build.zig.zon",
+    },
+}

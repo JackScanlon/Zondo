@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Zig (lldb)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/zig-out/bin/${workspaceFolderBasename}",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "terminal": "integrated",
+			"preLaunchTask": "Build Debug",
+      "stopOnEntry": false,
+      "env": {
+        "LLDB_USE_NATIVE_PDB_READER": "1"
+      }
+    }
+  ]
+}
