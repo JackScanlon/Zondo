@@ -24,10 +24,10 @@ Extracts & transforms [MONDO](https://www.ebi.ac.uk/ols4/ontologies/mondo) ontol
 ## 2. Development
 
 ### 2.1. Prerequisites
+> [!WARNING]  
+> Please ensure the compiler version matches the one used by this project, see [`.zigversion`](./.zigversion) for more information.
 
 1. Install [Zig](https://ziglang.org/learn/getting-started/).
-	> [!WARNING]  
-	> Please ensure the compiler version matches the one used by this project, see [`.zigversion`](./.zigversion) for more information.
 
 2. Install [Docker](https://docs.docker.com/engine/install/).
 
