@@ -6,29 +6,29 @@ const std = @import("std");
 /// See:
 /// - https://github.com/postgres/postgres/blob/master/src/backend/snowball/stopwords/english.stop
 const en_stopwords = std.StaticStringMap(void).initComptime(.{
-    .{"the"},     .{"a"},       .{"an"},      .{"is"},       .{"are"},         .{"was"},
-    .{"were"},    .{"be"},      .{"been"},    .{"being"},    .{"have"},        .{"has"},
-    .{"had"},     .{"do"},      .{"does"},    .{"did"},      .{"will"},        .{"would"},
-    .{"could"},   .{"should"},  .{"may"},     .{"might"},    .{"shall"},       .{"can"},
-    .{"need"},    .{"dare"},    .{"ought"},   .{"used"},     .{"to"},          .{"of"},
-    .{"in"},      .{"for"},     .{"on"},      .{"with"},     .{"at"},          .{"by"},
-    .{"from"},    .{"as"},      .{"into"},    .{"through"},  .{"during"},      .{"before"},
-    .{"after"},   .{"above"},   .{"below"},   .{"between"},  .{"out"},         .{"off"},
-    .{"over"},    .{"under"},   .{"again"},   .{"further"},  .{"then"},        .{"once"},
-    .{"it"},      .{"its"},     .{"itself"},  .{"this"},     .{"that"},        .{"these"},
-    .{"those"},   .{"am"},      .{"having"},  .{"doing"},    .{"don"},         .{"now"},
-    .{"i"},       .{"me"},      .{"my"},      .{"myself"},   .{"we"},          .{"our"},
-    .{"you"},     .{"your"},    .{"yours"},   .{"yourself"}, .{".yourselves"}, .{"he"},
-    .{"him"},     .{"himself"}, .{"his"},     .{"she"},      .{"her"},         .{"hers"},
-    .{"herself"}, .{"they"},    .{"them"},    .{"their"},    .{"theirs"},      .{"themselves"},
-    .{"what"},    .{"which"},   .{"because"}, .{"until"},    .{"while"},       .{"against"},
-    .{"who"},     .{"whom"},    .{"and"},     .{"but"},      .{"or"},          .{"nor"},
-    .{"not"},     .{"so"},      .{"very"},    .{"just"},     .{"about"},       .{"up"},
-    .{"if"},      .{"how"},     .{"when"},    .{"where"},    .{"why"},         .{"also"},
-    .{"too"},     .{"quite"},   .{"really"},  .{"all"},      .{"any"},         .{"some"},
-    .{"each"},    .{"every"},   .{"must"},    .{"between"},  .{"down"},        .{"here"},
-    .{"there"},   .{"both"},    .{"few"},     .{"more"},     .{"most"},        .{"other"},
-    .{"such"},    .{"no"},      .{"only"},    .{"own"},      .{"same"},        .{"than"},
+    .{"the"},     .{"a"},       .{"an"},      .{"is"},       .{"are"},        .{"was"},
+    .{"were"},    .{"be"},      .{"been"},    .{"being"},    .{"have"},       .{"has"},
+    .{"had"},     .{"do"},      .{"does"},    .{"did"},      .{"will"},       .{"would"},
+    .{"could"},   .{"should"},  .{"may"},     .{"might"},    .{"shall"},      .{"can"},
+    .{"need"},    .{"dare"},    .{"ought"},   .{"used"},     .{"to"},         .{"of"},
+    .{"in"},      .{"for"},     .{"on"},      .{"with"},     .{"at"},         .{"by"},
+    .{"from"},    .{"as"},      .{"into"},    .{"through"},  .{"during"},     .{"before"},
+    .{"after"},   .{"above"},   .{"below"},   .{"between"},  .{"out"},        .{"off"},
+    .{"over"},    .{"under"},   .{"again"},   .{"further"},  .{"then"},       .{"once"},
+    .{"it"},      .{"its"},     .{"itself"},  .{"this"},     .{"that"},       .{"these"},
+    .{"those"},   .{"am"},      .{"having"},  .{"doing"},    .{"don"},        .{"now"},
+    .{"i"},       .{"me"},      .{"my"},      .{"myself"},   .{"we"},         .{"our"},
+    .{"you"},     .{"your"},    .{"yours"},   .{"yourself"}, .{"yourselves"}, .{"he"},
+    .{"him"},     .{"himself"}, .{"his"},     .{"she"},      .{"her"},        .{"hers"},
+    .{"herself"}, .{"they"},    .{"them"},    .{"their"},    .{"theirs"},     .{"themselves"},
+    .{"what"},    .{"which"},   .{"because"}, .{"until"},    .{"while"},      .{"against"},
+    .{"who"},     .{"whom"},    .{"and"},     .{"but"},      .{"or"},         .{"nor"},
+    .{"not"},     .{"so"},      .{"very"},    .{"just"},     .{"about"},      .{"up"},
+    .{"if"},      .{"how"},     .{"when"},    .{"where"},    .{"why"},        .{"also"},
+    .{"too"},     .{"quite"},   .{"really"},  .{"all"},      .{"any"},        .{"some"},
+    .{"each"},    .{"every"},   .{"must"},    .{"between"},  .{"down"},       .{"here"},
+    .{"there"},   .{"both"},    .{"few"},     .{"more"},     .{"most"},       .{"other"},
+    .{"such"},    .{"no"},      .{"only"},    .{"own"},      .{"same"},       .{"than"},
     .{"s"},       .{"t"},
 });
 
@@ -44,7 +44,7 @@ pub fn processTerm(buf: []u8, onto: []const u8, ident: []const u8) []u8 {
 /// Combinatory _fn._ that normalizes the specified string by:
 /// 1. Removing unnecessary punctuation,
 /// 2. Transforming to lowercase,
-/// 3. Trims leading & trailing whitespace, and
+/// 3. Triming leading & trailing whitespace, and
 /// 4. Replacing stopwords with `?` identifier.
 ///
 /// Note:

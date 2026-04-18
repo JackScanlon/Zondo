@@ -1,5 +1,17 @@
 const std = @import("std");
 
+const zon: struct {
+    name: enum { zondo },
+    version: []const u8,
+    fingerprint: u64,
+    dependencies: struct {
+        clap: Dependency,
+        zimdjson: Dependency,
+    },
+    paths: []const []const u8,
+    const Dependency = struct { url: []const u8, hash: []const u8, lazy: bool = false };
+} = @import("build.zig.zon");
+
 pub fn build(b: *std.Build) !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
@@ -10,18 +22,39 @@ pub fn build(b: *std.Build) !void {
     const cwd_realpath = try cwd.realpathAlloc(alloc, ".");
     defer alloc.free(cwd_realpath);
 
-    // const project_name = std.fs.path.basename(cwd_realpath);
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+    const is_release = optimize != .Debug;
+
+    // opts
+    const options_opt = b.addOptions();
+    options_opt.addOption([]const u8, "version", zon.version);
+
+    const options = options_opt.createModule();
+
+    // deps
+    const clap_dep = b.dependency("clap", .{
+        .target = target,
+        .optimize = optimize,
+    });
 
     const zimdjson_dep = b.dependency("zimdjson", .{
         .target = target,
         .optimize = optimize,
     });
 
+    const clap = clap_dep.module("clap");
     const zimdjson = zimdjson_dep.module("zimdjson");
 
-    const is_release = optimize != .Debug;
+    // modules
+    const thesaurus = b.createModule(.{
+        .root_source_file = b.path("src/thesaurus/thesaurus.zig"),
+        .imports = &.{
+            .{ .name = "zimdjson", .module = zimdjson },
+        },
+    });
+
+    // artefacts
     const exe = b.addExecutable(.{
         .name = "zondo",
         .root_module = b.createModule(.{
@@ -34,13 +67,15 @@ pub fn build(b: *std.Build) !void {
                 "Omit debug symbols",
             ) orelse is_release,
             .imports = &.{
-                .{ .name = "zimdjson", .module = zimdjson },
+                .{ .name = "clap", .module = clap },
+                .{ .name = "options", .module = options },
+                .{ .name = "thesaurus", .module = thesaurus },
             },
         }),
     });
-
     b.installArtifact(exe);
 
+    // tests
     const run_cmd = b.addRunArtifact(exe);
     run_cmd.step.dependOn(b.getInstallStep());
 
@@ -57,7 +92,8 @@ pub fn build(b: *std.Build) !void {
             .target = target,
             .optimize = optimize,
             .imports = &.{
-                .{ .name = "zimdjson", .module = zimdjson },
+                .{ .name = "thesaurus", .module = thesaurus },
+                .{ .name = "clap", .module = clap },
             },
         }),
     });

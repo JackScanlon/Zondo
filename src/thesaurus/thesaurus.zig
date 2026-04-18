@@ -5,6 +5,7 @@
 //! - [MONDO Disease Ontology](https://www.ebi.ac.uk/ols4/ontologies/mondo)
 //! - [Postgres FtS Thesaurus Configuration](https://www.postgresql.org/docs/current/textsearch-dictionaries.html#TEXTSEARCH-THESAURUS)
 const std = @import("std");
+
 const zimdjson = @import("zimdjson");
 
 const queue = @import("queue.zig");

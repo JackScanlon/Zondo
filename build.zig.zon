@@ -8,6 +8,10 @@
             .url = "git+https://github.com/ezequielramis/zimdjson?ref=0.1.1#40a24fd69578c905ca85bc11696240623eefa96d",
             .hash = "zimdjson-0.1.1-89pgxaJFBgA3iVnu0xX0kHK5h9nQZWp3nmeLKFSPYcxk",
         },
+        .clap = .{
+            .url = "git+https://github.com/Hejsil/zig-clap?ref=0.10.0#e47028deaefc2fb396d3d9e9f7bd776ae0b2a43a",
+            .hash = "clap-0.10.0-oBajB434AQBDh-Ei3YtoKIRxZacVPF1iSwp3IX_ZB8f0",
+        },
     },
 
     .paths = .{
