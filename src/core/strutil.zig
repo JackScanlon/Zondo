@@ -81,8 +81,7 @@ pub fn indexOfScalar(input: []const u8, trg: u8) ?usize {
         while (i + vec_size <= n) : (i += vec_size) {
             const chunk: Vec = input[i..][0..vec_size].*;
 
-            var found = @as(@Vector(vec_size, bool), @splat(false));
-            found |= (chunk == trg_vec);
+            const found = (chunk == trg_vec);
 
             const mask = @as(std.meta.Int(.unsigned, vec_size), @bitCast(found));
             if (mask != 0) {
@@ -218,11 +217,13 @@ pub fn trimLeadingWhitespace(input: []const u8) []const u8 {
         while (i + vec_size <= n) : (i += vec_size) {
             const chunk: Vec = input[i..][0..vec_size].*;
 
-            const is_ws = @as(@Vector(vec_size, bool), chunk == simd_mask_space) |
-                @as(@Vector(vec_size, bool), chunk == simd_mask_tab) |
-                @as(@Vector(vec_size, bool), chunk == simd_mask_nl) |
-                @as(@Vector(vec_size, bool), chunk == simd_mask_cr) |
-                @as(@Vector(vec_size, bool), chunk == simd_mask_ff);
+            const is_space: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_space);
+            const is_tab: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_tab);
+            const is_nl: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_nl);
+            const is_cr: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_cr);
+            const is_ff: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_ff);
+
+            const is_ws: @Vector(vec_size, bool) = @bitCast(is_space | is_tab | is_nl | is_cr | is_ff);
 
             const mask = ~@as(std.meta.Int(.unsigned, vec_size), @bitCast(is_ws));
             if (mask != 0) {
@@ -256,11 +257,13 @@ pub fn trimTrailingWhitespace(input: []const u8) []const u8 {
             const start = i - vec_size;
             const chunk: Vec = input[start..][0..vec_size].*;
 
-            const is_ws = @as(@Vector(vec_size, bool), chunk == simd_mask_space) |
-                @as(@Vector(vec_size, bool), chunk == simd_mask_tab) |
-                @as(@Vector(vec_size, bool), chunk == simd_mask_nl) |
-                @as(@Vector(vec_size, bool), chunk == simd_mask_cr) |
-                @as(@Vector(vec_size, bool), chunk == simd_mask_ff);
+            const is_space: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_space);
+            const is_tab: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_tab);
+            const is_nl: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_nl);
+            const is_cr: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_cr);
+            const is_ff: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_ff);
+
+            const is_ws: @Vector(vec_size, bool) = @bitCast(is_space | is_tab | is_nl | is_cr | is_ff);
 
             const mask = @as(std.meta.Int(.unsigned, vec_size), @bitCast(is_ws));
             if (mask == simd_unsigned_max) {
@@ -297,25 +300,27 @@ pub fn findTrimmedBoundary(input: []const u8) struct { start: usize, end: usize,
             while (i + vec_size <= n) : (i += vec_size) {
                 const chunk: Vec = input[i..][0..vec_size].*;
 
-                const is_ws = @as(@Vector(vec_size, bool), chunk == simd_mask_space) |
-                    @as(@Vector(vec_size, bool), chunk == simd_mask_tab) |
-                    @as(@Vector(vec_size, bool), chunk == simd_mask_nl) |
-                    @as(@Vector(vec_size, bool), chunk == simd_mask_cr) |
-                    @as(@Vector(vec_size, bool), chunk == simd_mask_ff);
+                const is_space: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_space);
+                const is_tab: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_tab);
+                const is_nl: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_nl);
+                const is_cr: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_cr);
+                const is_ff: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_ff);
+
+                const is_ws: @Vector(vec_size, bool) = @bitCast(is_space | is_tab | is_nl | is_cr | is_ff);
 
                 const mask = ~@as(std.meta.Int(.unsigned, vec_size), @bitCast(is_ws));
                 if (mask != 0) {
-                    break :blk i + @ctz(mask);
+                    break :blk (i + @ctz(mask));
                 }
             }
 
             while (i < n) : (i += 1) {
                 if (!isCharASCIIWhitespace(input[i])) {
-                    break :blk i;
+                    break :blk (i);
                 }
             }
 
-            break :blk n;
+            break :blk (n);
         };
 
         if (start_index >= n) {
@@ -323,28 +328,30 @@ pub fn findTrimmedBoundary(input: []const u8) struct { start: usize, end: usize,
         }
 
         var end_index = blk: {
-            var i: usize = 0;
+            var i: usize = n;
             while (i >= vec_size) {
                 const start = i - vec_size;
                 const chunk: Vec = input[start..][0..vec_size].*;
 
-                const is_ws = @as(@Vector(vec_size, bool), chunk == simd_mask_space) |
-                    @as(@Vector(vec_size, bool), chunk == simd_mask_tab) |
-                    @as(@Vector(vec_size, bool), chunk == simd_mask_nl) |
-                    @as(@Vector(vec_size, bool), chunk == simd_mask_cr) |
-                    @as(@Vector(vec_size, bool), chunk == simd_mask_ff);
+                const is_space: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_space);
+                const is_tab: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_tab);
+                const is_nl: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_nl);
+                const is_cr: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_cr);
+                const is_ff: @Vector(vec_size, u1) = @bitCast(chunk == simd_mask_ff);
 
-                const mask = @as(std.meta.Int(.unsigned, vec_size), @bitCast(is_ws));
-                if (mask == simd_unsigned_max) {
-                    i -= vec_size;
-                } else {
-                    break :blk i - @clz(~mask);
+                const is_ws: @Vector(vec_size, bool) = @bitCast(is_space | is_tab | is_nl | is_cr | is_ff);
+
+                const mask = ~@as(std.meta.Int(.unsigned, vec_size), @bitCast(is_ws));
+                if (mask != 0) {
+                    break :blk (i - @clz(mask));
                 }
+
+                i -= vec_size;
             }
 
             while (i > 0 and isCharASCIIWhitespace(input[i])) : (i -= 1) {}
 
-            break :blk i;
+            break :blk (i);
         };
 
         end_index = @max(end_index, start_index);
@@ -397,9 +404,9 @@ pub fn toLowerCase(dest: []u8, src: []const u8) []u8 {
         while (i + vec_size <= src.len) : (i += vec_size) {
             const chunk: Vec = src[i..][0..vec_size].*;
 
-            const greater_than_A = chunk >= simd_mask_A;
-            const less_than_Z = chunk <= simd_mask_Z;
-            const is_upper = greater_than_A & less_than_Z;
+            const greater_than_A: @Vector(vec_size, u1) = @bitCast(chunk >= simd_mask_A);
+            const less_than_Z: @Vector(vec_size, u1) = @bitCast(chunk <= simd_mask_Z);
+            const is_upper: @Vector(vec_size, bool) = @bitCast(greater_than_A & less_than_Z);
 
             // Where `is_upper`, select the lowercase bit (0x20), otherwise 0x00
             const lower_mask = @select(u8, is_upper, simd_mask_lower, simd_mask_nul);
