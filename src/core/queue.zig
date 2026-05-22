@@ -29,11 +29,11 @@ pub const Batch = struct {
         allocator.free(self.items);
     }
 
-    pub fn isFull(self: *Self) bool {
+    pub fn isFull(self: Self) bool {
         return (self.next >= self.items.len);
     }
 
-    pub fn isEmpty(self: *Self) bool {
+    pub fn isEmpty(self: Self) bool {
         return self.next < 1;
     }
 

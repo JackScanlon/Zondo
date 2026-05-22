@@ -47,9 +47,14 @@ pub fn build(b: *std.Build) !void {
     const zimdjson = zimdjson_dep.module("zimdjson");
 
     // modules
-    const thesaurus = b.createModule(.{
-        .root_source_file = b.path("src/thesaurus/thesaurus.zig"),
+    const core = b.createModule(.{
+        .root_source_file = b.path("src/core/root.zig"),
+    });
+
+    const ontology = b.createModule(.{
+        .root_source_file = b.path("src/ontology/root.zig"),
         .imports = &.{
+            .{ .name = "core", .module = core },
             .{ .name = "zimdjson", .module = zimdjson },
         },
     });
@@ -69,7 +74,7 @@ pub fn build(b: *std.Build) !void {
             .imports = &.{
                 .{ .name = "clap", .module = clap },
                 .{ .name = "options", .module = options },
-                .{ .name = "thesaurus", .module = thesaurus },
+                .{ .name = "ontology", .module = ontology },
             },
         }),
     });
@@ -92,8 +97,9 @@ pub fn build(b: *std.Build) !void {
             .target = target,
             .optimize = optimize,
             .imports = &.{
-                .{ .name = "thesaurus", .module = thesaurus },
                 .{ .name = "clap", .module = clap },
+                .{ .name = "options", .module = options },
+                .{ .name = "ontology", .module = ontology },
             },
         }),
     });

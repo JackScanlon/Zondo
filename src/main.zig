@@ -7,6 +7,7 @@ const commands = @import("commands.zig");
 
 const SubCommands = enum {
     version,
+    extract,
     build,
 };
 
@@ -23,6 +24,10 @@ const params = clap.parseParamsComptime(
 var debug_alloc: std.heap.DebugAllocator(.{}) = .init;
 
 pub fn main() !void {
+    // if (builtin.os.tag == .windows) {
+    //     _ = std.os.windows.kernel32.SetConsoleOutputCP(65001);
+    // }
+
     const alloc, const is_debug = gpa: {
         break :gpa switch (builtin.mode) {
             .Debug, .ReleaseSafe => .{
@@ -74,8 +79,9 @@ pub fn main() !void {
 
     const command = res.positionals[0] orelse return error.MissingCommand;
     switch (command) {
-        .version => try commands.runVersion(allocator, &iter),
         .build => try commands.runBuild(allocator, &iter),
+        .extract => try commands.runExtract(allocator, &iter),
+        .version => try commands.runVersion(allocator, &iter),
     }
 }
 
@@ -89,8 +95,9 @@ fn usage() !void {
         \\  zondo <command> [flags]
         \\
         \\Available Commands:
-        \\  * version   Display the program version and exit.
         \\  * build     Build a PGXS thesaurus for a given MONDO release.
+        \\  * extract   Extract MONDO terms & relationships as RDBMS consumable CSV files.
+        \\  * version   Display the program version and exit.
         \\
         \\Flags:
         \\

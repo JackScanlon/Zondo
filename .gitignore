@@ -1,5 +1,5 @@
 # Output Files
-*.ths
+.output/**/*
 
 # Program/Test Files
 .project/resources/**/*

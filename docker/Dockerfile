@@ -60,5 +60,8 @@ COPY ./docker/lang/en_gb.affix "/usr/share/postgresql/${PG_MAJOR}/tsearch_data/e
 ## Copy gen. ontology thesaurus
 COPY ./.output/en_ontology.ths "/usr/share/postgresql/${PG_MAJOR}/tsearch_data/en_ontology.ths"
 
+## Copy gen. ontology consumables
+COPY ./.output/csvs "/var/lib/postgresql/csvs"
+
 ## Init DB
 COPY ./docker/sql/init.lang.sql /docker-entrypoint-initdb.d/

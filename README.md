@@ -23,12 +23,22 @@ Extracts & transforms [MONDO](https://www.ebi.ac.uk/ols4/ontologies/mondo) ontol
 After installation of the Zondo executable, a thesaurus can be built for a given MONDO release by running the following command:
 
 ```sh
-zondo build --input /path/to/mondo.json --output /path/to/en_ontology.ths 
+zondo build --input /path/to/mondo.json --outfile /path/to/en_ontology.ths 
 ```
 
-Where `--input` describes the path to the MONDO JSON file and `--output` specifies where the thesaurus should be generated.
+Where `--input` describes the path to the MONDO JSON file and `--outfile` specifies the file path of the generated thesaurus.
 
-#### 1.2.2. Command-Line Interface
+#### 1.2.1. Extracting Terms & Relationships
+
+Generate CSVs of minified ontological terms & their relationships to consume in a relational database by running the following command:
+
+```sh
+zondo extract --input /path/to/mondo.json --outdir /path/to/output/dir`
+```
+
+Where `--input` describes the path to the MONDO JSON file and `--outdir` specifies where the thesaurus should be generated.
+
+#### 1.2.3. Command-Line Interface
 
 ```bash
 zondo
@@ -38,8 +48,9 @@ Usage:
 	zondo {command} [flags]
 
 Available Commands:
-	* version   Display the program version and exit.
 	* build     Build a PGXS thesaurus for a given MONDO release.
+	* extract   Extract MONDO terms & relationships as RDBMS consumable CSV files.
+	* version   Display the program version and exit.
 
 Flags:
 	-h, --help Display this help text and exit
@@ -80,6 +91,5 @@ Flags:
 ### Todo
 
 Temporary tracker:
-- [x] Implement CLI functionality
 - [ ] Consider generating [PGXS](https://www.postgresql.org/docs/current/extend-pgxs.html) extension install package via templating
 - [ ] Add GH workflow for CI/CD/release & linting

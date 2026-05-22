@@ -20,8 +20,8 @@
 		"editor.tabSize": 4,
     "editor.formatOnSave": true,
 		"editor.insertSpaces": true,
-		"editor.detectIndentation": false,
-    "editor.defaultFormatter": "ziglang.vscode-zig"
+    "editor.defaultFormatter": "ziglang.vscode-zig",
+		"editor.detectIndentation": false
 	},
 	"[sql]": {
 		"editor.tabSize": 2,
@@ -31,12 +31,14 @@
 	"[markdown]": {
 		"editor.tabSize": 4,
 		"editor.insertSpaces": false,
+		"editor.detectIndentation": false,
 		"files.trimTrailingWhitespace": false
 	},
 	"[jsonc]": {
 		"editor.tabSize": 2,
 		"editor.insertSpaces": false,
-		"editor.defaultFormatter": "vscode.json-language-features"
+		"editor.defaultFormatter": "vscode.json-language-features",
+		"editor.detectIndentation": false
 	},
 
 	// File rule(s)

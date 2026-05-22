@@ -1,7 +1,11 @@
 //! Text processing module to clean terms & synonyms.
 const std = @import("std");
 
-/// Stopwords used in Postgres' FtS.
+const core = @import("core");
+
+const string = core.string;
+
+/// (Extended) Stopwords used in Postgres' EN FtS.
 ///
 /// See:
 /// - https://github.com/postgres/postgres/blob/master/src/backend/snowball/stopwords/english.stop
@@ -36,8 +40,8 @@ const en_stopwords = std.StaticStringMap(void).initComptime(.{
 ///
 /// Returns: `concat(lower(onto), lower(ident))`
 pub fn processTerm(buf: []u8, onto: []const u8, ident: []const u8) []u8 {
-    const name = std.ascii.lowerString(buf, onto);
-    const id = std.ascii.lowerString(buf[name.len..buf.len], ident);
+    const name = string.toLowerCase(buf, onto);
+    const id = string.toLowerCase(buf[name.len..buf.len], ident);
     return buf[0..(name.len + id.len)];
 }
 
@@ -70,7 +74,7 @@ fn filterStopwords(str: []u8) ![]u8 {
     var idx: usize = 0;
     var buf: [1024]u8 = undefined;
 
-    var it = std.mem.tokenizeScalar(u8, str[0..str.len], ' ');
+    var it = string.tokenizeScalar(str[0..str.len], ' ');
     while (it.next()) |token| {
         if (idx != 0) {
             buf[idx] = ' ';
@@ -95,7 +99,8 @@ fn filterStopwords(str: []u8) ![]u8 {
 }
 
 fn normalizeSynonym(str: []u8) ![]u8 {
-    var n: usize = str.len;
+    const n: usize = str.len;
+
     var copy: [1024]u8 = undefined;
     std.mem.copyForwards(u8, &copy, str);
 
@@ -105,7 +110,7 @@ fn normalizeSynonym(str: []u8) ![]u8 {
     while (i < n) {
         c = copy[i];
 
-        const size = getSizeUtf8(c);
+        const size = string.getSizeUtf8(c);
         if (size == 1 and !std.ascii.isControl(c)) {
             if (std.ascii.isWhitespace(c)) {
                 c = ' ';
@@ -141,41 +146,14 @@ fn normalizeSynonym(str: []u8) ![]u8 {
         i += size;
     }
 
-    var flag: u8 = 0b0;
-    i = 0;
-    while (i < j) {
-        if (std.mem.indexOfScalar(u8, &std.ascii.whitespace, str[i]) != null) {
-            flag |= 0b1;
-            i += 1;
-        }
-
-        if (std.mem.indexOfScalar(u8, &std.ascii.whitespace, str[j - 1]) != null) {
-            flag |= 0b1;
-            j -= 1;
-        }
-
-        if ((flag & flag) == 0b0) {
-            break;
-        }
-        flag = 0b0;
+    const bounds = string.findTrimmedBoundary(str[0..j]);
+    if (bounds.size > 0 and bounds.start != 0 and bounds.end != j) {
+        std.mem.copyForwards(u8, str, str[bounds.start..bounds.end]);
     }
 
-    j = @max(j, i);
-    n = j - i;
-
-    if (n > 0) {
-        std.mem.copyForwards(u8, str, str[i..j]);
-    }
-
-    return str[i..j];
+    return str[bounds.start..bounds.end];
 }
 
 inline fn isStopword(token: []const u8) bool {
     return en_stopwords.has(token);
-}
-
-inline fn getSizeUtf8(char: u8) u3 {
-    return std.unicode.utf8ByteSequenceLength(char) catch {
-        return 1;
-    };
 }
