@@ -16,7 +16,7 @@ pub const vec_size = blk: {
 /// Target-dependant flag which specifies whether SIMD can be utilised.
 pub const use_simd = blk: {
     const recommended = std.simd.suggestVectorLength(u8);
-    break :blk (recommended == null);
+    break :blk (recommended != null);
 };
 
 /// Vector of u8 to support SIMD instructions.
