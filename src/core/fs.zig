@@ -18,27 +18,6 @@ pub fn isLikelyMakeablePath(path: []const u8) bool {
         return false;
     }
 
-    // var i: usize = 0;
-    // if (use_simd) {
-    //     const Vec = @Vector(vec_size, u8);
-    //     const dot_vec: Vec = @splat('.');
-
-    //     while (i + vec_size <= input.len) : (i += vec_size) {
-    //         const chunk: Vec = input[i..][0..vec_size].*;
-    //         const mask = chunk != dot_vec;
-    //         if (@reduce(.Or, mask)) {
-    //             return true;
-    //         }
-    //     }
-    // }
-
-    // while (i < input.len) : (i += 1) {
-    //     if (input[i] != '.') {
-    //         return true;
-    //     }
-    // }
-
-    // return false;
     return strutil.containsMoreThanScalar(input, '.');
 }
 

@@ -2,19 +2,9 @@
 const std = @import("std");
 
 const types = @import("types.zig");
+const strutil = @import("strutil.zig");
 
 const Error = types.Error;
-
-// Note:
-// - Could use `@call` to inline this after import from strutil?
-//
-// See:
-// - https://ziglang.org/documentation/master/#toc-call
-inline fn getSizeUtf8(char: u8) u3 {
-    return std.unicode.utf8ByteSequenceLength(char) catch {
-        return 1;
-    };
-}
 
 /// A variable length, resizable collection of u8 elements.
 pub const StringBuffer = struct {
@@ -85,12 +75,12 @@ pub const StringBuffer = struct {
     }
 
     pub fn escapeWrite(self: *Self, data: []const u8) !void {
-        // See:
+        // Ref:
         // - https://ziglang.org/documentation/master/std/#std.Io.Writer.printInt
         const n = data.len;
         var i: usize = 0;
         while (i < n) {
-            const sz = getSizeUtf8(data[i]);
+            const sz = strutil.getSizeUtf8(data[i]);
             switch (sz) {
                 1 => switch (data[i]) {
                     '\n' => try self.write("\\n"),

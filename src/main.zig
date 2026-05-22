@@ -24,9 +24,9 @@ const params = clap.parseParamsComptime(
 var debug_alloc: std.heap.DebugAllocator(.{}) = .init;
 
 pub fn main() !void {
-    // if (builtin.os.tag == .windows) {
-    //     _ = std.os.windows.kernel32.SetConsoleOutputCP(65001);
-    // }
+    if (builtin.os.tag == .windows) {
+        _ = std.os.windows.kernel32.SetConsoleOutputCP(65001);
+    }
 
     const alloc, const is_debug = gpa: {
         break :gpa switch (builtin.mode) {
